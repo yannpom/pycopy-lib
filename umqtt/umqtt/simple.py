@@ -10,7 +10,7 @@ class MQTTClient:
 
     def __init__(self, client_id, server, port=1883):
         self.client_id = client_id
-        self.sock = socket.socket()
+        self.sock = None
         self.addr = socket.getaddrinfo(server, port)[0][-1]
         self.pid = 0
 
@@ -19,6 +19,7 @@ class MQTTClient:
         self.sock.write(s)
 
     def connect(self):
+        self.sock = socket.socket()
         self.sock.connect(self.addr)
         msg = bytearray(b"\x10\0\0\x04MQTT\x04\x02\0\0")
         msg[1] = 10 + 2 + len(self.client_id)
