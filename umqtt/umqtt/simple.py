@@ -65,6 +65,8 @@ class MQTTClient:
         if res is None:
             return None
         self.sock.setblocking(True)
+        if res == b"":
+            raise OSError(-1)
         assert res == b"\x30"
         sz = self.sock.read(1)[0]
         topic_len = self.sock.read(2)
