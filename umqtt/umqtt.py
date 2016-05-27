@@ -3,6 +3,9 @@ import ustruct as struct
 from ubinascii import hexlify
 import time
 
+class MQTTException(Exception):
+    pass
+
 class MQTTClient:
 
     def __init__(self, client_id, server, port=1883):
@@ -23,7 +26,10 @@ class MQTTClient:
         print(hex(len(msg)), hexlify(msg, ":"))
         self.send_str(self.client_id)
         resp = self.sock.read(4)
-        assert resp == b"\x20\x02\0\0", resp
+        assert resp[0] == 0x20 and resp[1] == 0x02
+        if resp[3] != 0:
+            raise MQTTException(resp[3])
+        return resp[2] & 1
 
     def disconnect(self):
         self.sock.write(b"\xe0\0")
