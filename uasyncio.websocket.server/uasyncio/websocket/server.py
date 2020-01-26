@@ -29,7 +29,7 @@ def WSReader(reader, writer):
         webkey = None
         while 1:
             l = yield from reader.readline()
-            print(l)
+            #print(l)
             if not l:
                 raise ValueError()
             if l == b"\r\n":
@@ -51,7 +51,7 @@ Sec-WebSocket-Accept: """)
         await writer.awrite(respkey)
         await writer.awrite("\r\n\r\n")
 
-        print("Finished webrepl handshake")
+        #print("Finished webrepl handshake")
 
         ws = websocket.websocket(reader.ios)
         rws = uasyncio.StreamReader(reader.ios, ws)
